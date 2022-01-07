@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ergo"
+version = "0.1.0"
+description = ""
+authors = ["long2ice <long2ice@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+tortoise-orm = "*"
+starlette = "*"
+uvicorn = "*"
+pydantic = "*"
+
+[tool.poetry.dev-dependencies]
+mypy = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
