@@ -1,12 +1,11 @@
 from starlette.requests import Request
 
 from ergo import Ergo, Config
-from ergo.view import View
 
 app = Ergo(config=Config())
 
 
-class Index(View):
+class Index:
     async def get(self, request: Request):
         return {'msg': 'view'}
 

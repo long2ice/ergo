@@ -5,7 +5,6 @@ from starlette.responses import Response, JSONResponse
 from starlette.routing import Route, BaseRoute
 
 from ergo.http import Method
-from ergo.view import View
 
 
 class Router:
@@ -20,14 +19,16 @@ class Router:
         self._routes.append(Route(path, wrapped, methods=[method.value for method in methods or []]))
 
     def route(self, path: str, methods: typing.List[Method] = None):
-        def wrapper(func: typing.Union[typing.Callable, typing.Type[View]]):
+        def wrapper(func: typing.Callable):
             return self.add_route(path, func, methods)
 
         return wrapper
 
-    def add_view(self, path: str, view: View):
+    def add_view(self, path: str, view):
         for method in Method:
-            self.add_route(path, getattr(view, method.lower()), methods=[Method(method)])
+            route = method.lower()
+            if hasattr(view, route):
+                self.add_route(path, getattr(view, route), methods=[Method(method)])
 
     def get(self, path: str):
         return self.route(path, methods=[Method.GET])
