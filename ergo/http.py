@@ -10,3 +10,10 @@ class Method(str, Enum):
     OPTION = "OPTION"
     PATCH = "PATCH"
     TRACE = "TRACE"
+
+
+class ParamTypes(str, Enum):
+    query = "query"
+    header = "header"
+    path = "path"
+    cookie = "cookie"

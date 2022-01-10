@@ -1,10 +1,31 @@
 import typing
 
+from dependency_injector import containers
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute, Route
 
 from ergo.http import Method
+
+
+class ContainerRoute(Route):
+    def __init__(
+        self,
+        path: str,
+        endpoint: typing.Callable,
+        *,
+        methods: typing.List[str] = None,
+        name: str = None,
+        include_in_schema: bool = True,
+    ):
+        super().__init__(
+            path, endpoint, methods=methods, name=name, include_in_schema=include_in_schema
+        )
+        self._container = containers.DynamicContainer()
+
+    @property
+    def container(self):
+        return self._container
 
 
 class Router:
@@ -32,7 +53,9 @@ class Router:
         async def _(request: Request):
             return await self._wrapped(request, func, response_cls)
 
-        self._routes.append(Route(path, _, methods=[method.value for method in methods or []]))
+        self._routes.append(
+            ContainerRoute(path, _, methods=[method.value for method in methods or []])
+        )
 
     def route(
         self,
