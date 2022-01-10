@@ -4,6 +4,7 @@ from pydantic import BaseSettings
 
 
 class Config(BaseSettings):
-    DEBUG: bool = False
-    TORTOISE_ORM: Optional[Dict] = None
-    TEMPLATE: Optional[str] = None
+    debug: bool = False
+    template_path: Optional[str] = None
+    tortoise_orm: Optional[Dict] = None
+    generate_schemas: bool = False

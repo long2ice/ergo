@@ -7,7 +7,7 @@ from starlette.routing import Mount
 from ergo.route import Router
 
 if typing.TYPE_CHECKING:
-    from ergo import Method
+    from ergo.http import Method
 
 
 class Group(Router):
@@ -19,11 +19,17 @@ class Group(Router):
         self._mount = Mount(path, name=name, routes=self._routes)
         self._path = path
 
-    def add_route(self, path: str, func: typing.Callable, methods: typing.List['Method'] = None):
-        async def wrapped(request: Request) -> Response:
-            return self._response_cls(await func(request))
+    def add_route(
+        self,
+        path: str,
+        func: typing.Callable,
+        methods: typing.List["Method"] = None,
+        response_cls: typing.Type[Response] = None,
+    ):
+        async def _(request: Request):
+            return await self._wrapped(request, func, response_cls)
 
-        self.mount.app.add_route(path, wrapped, methods=methods)
+        self.mount.app.add_route(path, _, methods=methods)
 
     def group(self, path: str, name: str = None, response_cls: typing.Type[Response] = None):
         g = Group(self._path + path, name=name, response_cls=response_cls or self._response_cls)
