@@ -38,7 +38,7 @@ class Ergo(Router):
         if self._config.tortoise_orm:
             register_tortoise(
                 self._app,
-                config=self._config.tortoise_orm,
+                config=self._config.tortoise_orm.dict(),
                 generate_schemas=self._config.generate_schemas,
             )
         if self._config.template_path:
